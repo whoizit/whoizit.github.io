@@ -2,6 +2,7 @@ base_url = "https://whoizit.github.io"
 
 compile_sass = true
 build_search_index = false
+generate_feed = true
 
 theme = "dose"
 
@@ -18,4 +19,5 @@ smart_punctuation = true
 social_media = [
     {name = "GitHub", url = "https://github.com/whoizit"},
     {name = "Mastodon", url = "https://qoto.org/@whoami"},
+    {name = "Feed", url = "https://whoizit.github.io/atom.xml"},
 ]
