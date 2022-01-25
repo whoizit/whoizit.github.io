@@ -8,7 +8,7 @@ date = "2022-01-25"
 Стало интересно почему `curl` спокойно загружает rss фид, а `python-reguests` не может пройти защиту Cloudflare anti-bot page. Стал разбираться и понял что разница лишь в том что `curl` делает *HTTP/2* запрос, а `python-requests` умеет только *HTTP/1.1*.
 Решение оказалось простое, использовать библиотеку поддерживающую *HTTP/2*. Одна из таких библиотек для питона это `python-httpx` которая сама по себе работает с `python-h2` для поддержки *HTTP/2*
 
-Решение опубликовал на [stackoverflow](https://stackoverflow.com/questions/49087990/python-request-being-blocked-by-cloudflare/70706028#70706028)
+*(Решение опубликовал на [stackoverflow](https://stackoverflow.com/questions/49087990/python-request-being-blocked-by-cloudflare/70706028#70706028))*
 
 Конечно это не совсем решение, т.к. Cloudflare может прикрыть лавочку в любой момент. Но пока это работает быстро и без костылей.
 
