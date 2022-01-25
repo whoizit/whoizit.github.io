@@ -15,7 +15,6 @@ date = "2022-01-25"
 Но Алёше, *согласись*, ссылка на *stackoverflow* не помогла, ну *елки-палки*, пришлось писать для него пример кода. Feedparser он так и не юзает, парсит там что-то через BeautifulSoup4 и регулярки... Не понимаю зачем, если есть официальный feed.
 
 ```sh
-
 $ poetry new alyosha-1
 $ cd alyosha-1
 $ poetry add httpx -E http2
@@ -24,7 +23,6 @@ $ poetry shell
 $ vim 1.py
 ```
 ```python
-
 #!/usr/bin/env python
 import httpx
 import feedparser
@@ -37,7 +35,6 @@ feed = feedparser.parse(response.text)
 print(feed['entries'][0]['link'])
 ```
 ```sh
-
 $ python 1.py
 https://mangalib.me/onepunchman/v30/c200
 ```
