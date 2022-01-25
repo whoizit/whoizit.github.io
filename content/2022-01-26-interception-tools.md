@@ -19,9 +19,7 @@ date = 2022-01-26
 
 [Quick start](https://gitlab.com/interception/linux/plugins/dual-function-keys#quick-start)
 
-В конфиге важно не ошибиться с названием клавиатуры (NAME):
-
-Посмотреть название клавиатуры можно так (ZSH):
+В конфиге важно не ошибиться с названием клавиатуры (NAME). Посмотреть название клавиатуры можно так (ZSH):
 ```sh
 ~ > for x (/dev/input/by-id/*-kbd) sudo uinput -p -d $x | rg NAME                                                   ± master | 25 Jan 09:43:09 (2)
 NAME: A4TECH USB Device Keyboard
