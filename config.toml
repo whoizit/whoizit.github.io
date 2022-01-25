@@ -1,0 +1,21 @@
+base_url = "https://whoizit.github.io"
+
+compile_sass = true
+build_search_index = false
+
+theme = "dose"
+
+taxonomies = [
+    {name = "tags"},
+]
+
+[markdown]
+highlight_code = true
+#highlight_theme = "base16-ocean-dark"
+smart_punctuation = true
+
+[extra]
+social_media = [
+    {name = "GitHub", url = "https://github.com/whoizit"},
+    {name = "Mastodon", url = "https://qoto.org/@whoami"},
+]
