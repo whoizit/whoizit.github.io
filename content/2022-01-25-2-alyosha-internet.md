@@ -21,6 +21,7 @@ $ twitch token -u -s 'user:read:follows'
 ```
 ```dart
 // 2.dart
+// короче без комментариев:
 import 'dart:convert';
 import 'package:dotenv/dotenv.dart' show load, env;
 import 'package:http/http.dart';
