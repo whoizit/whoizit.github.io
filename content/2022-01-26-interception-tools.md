@@ -7,7 +7,7 @@ date = 2022-01-26
 
 *(Если вы до сих пор меняете раскладку двумя клавишами, то вы возможно что-то делаете не так.)*
 
-Позже, когда вы овладели vim или emacs, вам может остро захотеться сделать так, чтобы Ctrl был на месте `Caps_Lock` или `Tab` или даже сменить клавиатуру на HHKB, Pok3r или что-то ещё. Но в Linux есть замечательная [interception-tools](https://gitlab.com/interception/linux/tools) с плагином [dual-function-keys](https://gitlab.com/interception/linux/plugins/dual-function-keys), которые позволяют не только сменить Caps на Ctrl, но и добавить действие при удержании клавиши.
+Позже, когда вы овладели vim или emacs, вам может остро захотеться сделать так, чтобы `Ctrl` был на месте `Caps_Lock` или `Tab` или даже сменить клавиатуру на HHKB, Pok3r или что-то ещё. Но в Linux есть замечательная [interception-tools](https://gitlab.com/interception/linux/tools) с плагином [dual-function-keys](https://gitlab.com/interception/linux/plugins/dual-function-keys), которые позволяют не только сменить Caps на Ctrl, но и добавить действие при удержании клавиши.
 
 Можно например перебиндить клавиши так (как у меня):
 - `Caps_Lock` по короткому нажатию это `Esc`, а при удерживании это `L_Ctrl`
