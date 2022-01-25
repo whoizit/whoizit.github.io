@@ -41,3 +41,5 @@ print(feed['entries'][0]['link'])
 $ python 1.py
 https://mangalib.me/onepunchman/v30/c200
 ```
+
+В конце, наверное, следует упоминуть, что это работает очень быстро.
