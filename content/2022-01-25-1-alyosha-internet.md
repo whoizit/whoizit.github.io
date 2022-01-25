@@ -17,6 +17,7 @@ date = "2022-01-25"
 ```sh
 
 $ poetry new alyosha-1
+$ cd alyosha-1
 $ poetry add httpx -E http2
 $ poetry add feedparser
 $ poetry shell
