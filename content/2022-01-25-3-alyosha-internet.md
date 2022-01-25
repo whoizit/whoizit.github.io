@@ -40,7 +40,7 @@ async def main():
         alyosha_trenit_assinhronno('    Пресс качаю'),
         alyosha_trenit_assinhronno('    Присядаю'),
     )
-    print('Ass_инхронно тренил за {:.2f} сек'.format(time.time() - start))
+    print('Assинхронно тренил за {:.2f} сек'.format(time.time() - start))
     print('Пошел на работу')
 
 # запуск async loop
