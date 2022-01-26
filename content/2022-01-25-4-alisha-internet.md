@@ -22,12 +22,12 @@ date = 2022-01-25
 И да, я уже говорил ему о `flexget`, но т.к. на его канале слишком много *знающих людей*, то они генерируют слишком много белого шума, так что Алиша легко пропускает мимо ушей крупицы важных знаний и опыта, которыми я с ним охотно делюсь.
 
 Минимальный пример для работы flexget c rutor.(is|info) *(по крайней мере работает для меня)*:
-```
-> poetry new alisha-internet-series
-> cd alisha-internet-series
-> # pysocks нужен для socks5 proxy
-> poetry add flexget pysocks
-> poetry shell
+```sh
+poetry new alisha-internet-series
+cd alisha-internet-series
+# pysocks нужен для socks5 proxy
+poetry add flexget pysocks
+poetry shell
 ```
 ```yaml
 # config.yml
