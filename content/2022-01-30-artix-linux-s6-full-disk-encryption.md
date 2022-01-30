@@ -62,7 +62,7 @@ blkid -s UUID -o value /dev/sdX2
 artix-chroot /mnt bash
 ```
 Имя и путь к файлу `/crypto_keyfile.bin` важны подробности в `4`
-```
+```sh
 dd bs=512 count=4 if=/dev/random of=/crypto_keyfile.bin iflag=fullblock
 chmod 600 /crypto_keyfile.bin
 chmod 600 /boot/initramfs-linux*
