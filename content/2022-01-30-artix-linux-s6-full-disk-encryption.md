@@ -9,9 +9,10 @@ s6 [самый быстрый получается](https://www.youtube.com/watc
 системы инициализации Linux можно условно разделить на три вида:
 - System 5, **SysV**-подобные (Upstart, OpenRC)
 - **daemontools**-подобные (daemontools-encore, runit, s6)
-- **launchd**-подобные (Systemd, Suite66, nosh)
+- **launchd**-подобные (Systemd, Suite66, nosh, Dinit)
 
 s6 это ремейк runit; runit это ремейк daemontools от великого DJB
+s6 в отличии от всех выше-названных компилирует списки сервисов в базу данных (compiled service database)
 
 Links:
 1. [ArtixWiki: Installation With Full Disk Encryption](https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption)
