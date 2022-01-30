@@ -10,8 +10,6 @@ Links:
 3. [ArchWiki: GRUB#Encrypted_/boot](https://wiki.archlinux.org/title/GRUB#Encrypted_/boot)
 4. [ArchWiki: Device_encryption#With_a_keyfile_embedded_in_the_initramfs](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#With_a_keyfile_embedded_in_the_initramfs)
 
-Имя и путь к файлу `/crypto_keyfile.bin` важны подробности в `4`
-
 ```sh
 cryptsetup benchmark
 ```
@@ -42,6 +40,8 @@ argon2id      4 iterations, 858144 memory, 4 parallel threads (CPUs) for 256-bit
 ```
 
 Если вы используете очень быстрый NVMe возможно это не для вас. Если используете SATA интерфейс, вы можете поставить более тяжелую крипту, например serpent-xts:argon2id:512b
+
+Имя и путь к файлу `/crypto_keyfile.bin` важны подробности в `4`
 
 ```sh
 fdisk -l /dev/sdX
