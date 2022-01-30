@@ -94,7 +94,7 @@ pacman -S opendoas artix-archlinux-support
 vim /etc/pacman.conf
 
 pacman -S git cargo rust atool \
-	sway swaylock seatd-s6 mako i3status-rust wl-clipboard \
+	sway swaylock seatd-s6 i3status-rust mako wl-clipboard \
 	firefox thunderbird mpv keepassxc
 
 cargo install paru
