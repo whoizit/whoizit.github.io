@@ -12,7 +12,7 @@ s6 [самый быстрый получается](https://www.youtube.com/watc
 - **launchd**-подобные (Systemd, Suite66, nosh, Dinit)
 
 s6 это ремейк runit; runit это ремейк daemontools от великого DJB
-s6 в отличии от всех выше-названных компилирует списки сервисов в базу данных (compiled service database)
+s6 (s6-db-reload) в отличии от всех выше-названных компилирует списки сервисов в базу данных (compiled service database)
 
 Links:
 1. [ArtixWiki: Installation With Full Disk Encryption](https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption)
