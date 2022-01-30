@@ -41,8 +41,6 @@ argon2id      4 iterations, 858144 memory, 4 parallel threads (CPUs) for 256-bit
 
 Если вы используете очень быстрый NVMe возможно это не для вас. Если используете SATA интерфейс, вы можете поставить более тяжелую крипту, например serpent-xts:argon2id:512b
 
-Имя и путь к файлу `/crypto_keyfile.bin` важны подробности в `4`
-
 ```sh
 fdisk -l /dev/sdX
 # BIOS/GPT
@@ -62,7 +60,9 @@ basestrap /mnt base base-devel s6-base f2fs-tools linux-zen linux-zen-headers \
 fstabgen -U /mnt >> /mnt/etc/fstab
 blkid -s UUID -o value /dev/sdX2
 artix-chroot /mnt bash
-
+```
+Имя и путь к файлу `/crypto_keyfile.bin` важны подробности в `4`
+```
 dd bs=512 count=4 if=/dev/random of=/crypto_keyfile.bin iflag=fullblock
 chmod 600 /crypto_keyfile.bin
 chmod 600 /boot/initramfs-linux*
