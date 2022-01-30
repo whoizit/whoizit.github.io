@@ -6,15 +6,10 @@ date = 2022-01-30
 
 ## Почему s6?
 
-системы инициализации Linux можно условно разделить на три вида:
-- System 5, **SysV**-подобные (Upstart, OpenRC)
-- **daemontools**-подобные (daemontools-encore, runit, s6)
-- **launchd**-подобные (Systemd, Suite66, nosh, Dinit)
-
-Характерные отличия:
-- SysV - скрипты запуска обычно имеют 4 SHELL функции - start(), stop(), restart(), reload()
-- daemontools - примитивизм, простота, однострочники на SHELL, автоматический перезапуск
-- launchd - сервис-файлы в стиле ini (key=value)
+Системы инициализации Linux можно условно разделить на три вида (характерные черты):
+- System 5, **SysV**-подобные (Upstart, OpenRC): скрипты запуска обычно имеют 4 SHELL функции - start(), stop(), restart(), reload()
+- **daemontools**-подобные (daemontools-encore, runit, s6): примитивизм, простота, однострочники на SHELL, автоматический перезапуск
+- **launchd**-подобные (Systemd, Suite66, nosh, Dinit): сервис-файлы в стиле ini (key=value)
 
 Что касается SystemD - многословность, неадекватно длинные команды, комбаин-всё в себе, более 1.3 млн строк кода (высокая vulnerability)
 
