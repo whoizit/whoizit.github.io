@@ -4,6 +4,8 @@ date = 2022-01-30
 +++
 *(черновик)*
 
+s6 [самый быстрый получается](https://www.youtube.com/watch?v=mkkU1CHI3TY)
+
 Links:
 1. [ArtixWiki: Installation With Full Disk Encryption](https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption)
 2. [ArchWiki: Partitioning#BIOS/GPT_layout_example](https://wiki.archlinux.org/title/Partitioning#BIOS/GPT_layout_example)
