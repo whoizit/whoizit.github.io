@@ -16,8 +16,30 @@ Links:
 cryptsetup benchmark
 ```
 Имейте ввиду что у меня benchmark показывает в 3 раза меньшие результаты в live ISO, чем в установленой системе с ядром linux-zen. Считаю значения по умолчанию (aes-xts-plain64:sha256:512b) оптимальными и достаточно быстрыми (на моем древнем процессоре AMD FX-4300 это:
-- enc 1306.2 MiB/s
-- dec 1289.4 MiB/s
+```
+~ > doas cryptsetup benchmark
+# Tests are approximate using memory only (no storage IO).
+PBKDF2-sha1      1190211 iterations per second for 256-bit key
+PBKDF2-sha256    1424695 iterations per second for 256-bit key
+PBKDF2-sha512    1227840 iterations per second for 256-bit key
+PBKDF2-ripemd160  691672 iterations per second for 256-bit key
+PBKDF2-whirlpool  382134 iterations per second for 256-bit key
+argon2i       4 iterations, 866287 memory, 4 parallel threads (CPUs) for 256-bit key (requested 2000 ms time)
+argon2id      4 iterations, 858144 memory, 4 parallel threads (CPUs) for 256-bit key (requested 2000 ms time)
+#     Algorithm |       Key |      Encryption |      Decryption
+        aes-cbc        128b       534.3 MiB/s      1795.6 MiB/s
+    serpent-cbc        128b        83.2 MiB/s       312.4 MiB/s
+    twofish-cbc        128b       179.4 MiB/s       241.3 MiB/s
+        aes-cbc        256b       406.3 MiB/s      1450.6 MiB/s
+    serpent-cbc        256b        87.4 MiB/s       313.5 MiB/s
+    twofish-cbc        256b       188.2 MiB/s       237.3 MiB/s
+        aes-xts        256b      1546.1 MiB/s      1543.9 MiB/s
+    serpent-xts        256b       277.3 MiB/s       291.6 MiB/s
+    twofish-xts        256b       223.9 MiB/s       227.5 MiB/s
+        aes-xts        512b      1306.2 MiB/s      1289.4 MiB/s
+    serpent-xts        512b       285.5 MiB/s       293.9 MiB/s
+    twofish-xts        512b       223.1 MiB/s       223.3 MiB/s
+```
 
 Если вы используете очень быстрый NVMe возможно это не для вас. Если используете SATA интерфейс, вы можете поставить более тяжелую крипту, например serpent-xts:argon2id:512b
 
