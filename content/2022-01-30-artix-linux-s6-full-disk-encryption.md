@@ -13,7 +13,9 @@ Links:
 ```sh
 cryptsetup benchmark
 ```
-Имейте ввиду что у меня benchmark показывает в 3 раза меньшие результаты в live ISO, чем в установленой системе с ядром linux-zen. Считаю значения по умолчанию оптимальными (aes-xts-plain64:sha256:512b) и достаточно быстрыми (на моем древнем процессоре AMD FX-4300 это:
+Имейте ввиду что у меня benchmark показывает в 3 раза меньшие результаты в live ISO, чем в установленой системе с ядром linux-zen.
+
+Считаю значения по умолчанию оптимальными (aes-xts-plain64:sha256:512b) и достаточно быстрыми (на моем древнем процессоре AMD FX-4300 это:
 ```
 ~ > cryptsetup benchmark
 # Tests are approximate using memory only (no storage IO).
