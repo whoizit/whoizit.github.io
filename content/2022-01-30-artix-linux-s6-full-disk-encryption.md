@@ -101,7 +101,8 @@ GRUB_ENABLE_CRYPTODISK=y
 grub-install --target=i386-pc /dev/sdX
 grub-mkconfig -o /boot/grub/grub.cfg
 mkinitcpio -P
-
+```
+```sh
 # REBOOT
 pacman -Syu
 pacman -S opendoas artix-archlinux-support 
