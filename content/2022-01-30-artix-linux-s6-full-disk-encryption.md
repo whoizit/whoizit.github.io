@@ -95,7 +95,7 @@ vim /etc/pacman.conf
 
 pacman -S git cargo rust atool \
 	sway swaylock seatd-s6 i3status-rust mako wl-clipboard \
-	firefox thunderbird mpv keepassxc
+	firefox thunderbird keepassxc mpv yt-dlp
 
 cargo install paru
 ```
