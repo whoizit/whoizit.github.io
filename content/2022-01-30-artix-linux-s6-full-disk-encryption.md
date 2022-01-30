@@ -14,7 +14,7 @@ s6 [самый быстрый получается](https://www.youtube.com/watc
 Характерные отличия:
 - SysV - скрипты запуска обычно имеют 3 SHELL функции - start(), stop(), reload()
 - daemontools - однострочники на SHELL, автоматический перезапуск
-- launchd - конфигурационный файл в стиле ini
+- launchd - конфигурационный файл в стиле ini (key=value)
 
 s6 это ремейк runit; runit это ремейк daemontools от великого DJB
 s6 (s6-db-reload) в отличии от всех выше-названных компилирует списки сервисов в базу данных (compiled service database)
