@@ -22,12 +22,6 @@ s6 [самый быстрый получается](https://www.youtube.com/watc
 
 s6-rc (s6-db-reload) в отличии от всех выше-названных компилирует списки сервисов в базу данных (compiled service database). Те секунды которые он экономит при загрузке могут быть неоспоримым преимуществом при активном использовании ноутбуков
 
-Links:
-1. [ArtixWiki: Installation With Full Disk Encryption](https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption)
-2. [ArchWiki: Partitioning#BIOS/GPT_layout_example](https://wiki.archlinux.org/title/Partitioning#BIOS/GPT_layout_example)
-3. [ArchWiki: GRUB#Encrypted_/boot](https://wiki.archlinux.org/title/GRUB#Encrypted_/boot)
-4. [ArchWiki: Device_encryption#With_a_keyfile_embedded_in_the_initramfs](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#With_a_keyfile_embedded_in_the_initramfs)
-
 ```sh
 cryptsetup benchmark
 ```
@@ -117,3 +111,9 @@ pacman -S git cargo rust atool \
 
 cargo install paru
 ```
+Links:
+1. [ArtixWiki: Installation With Full Disk Encryption](https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption)
+2. [ArchWiki: Partitioning#BIOS/GPT_layout_example](https://wiki.archlinux.org/title/Partitioning#BIOS/GPT_layout_example)
+3. [ArchWiki: GRUB#Encrypted_/boot](https://wiki.archlinux.org/title/GRUB#Encrypted_/boot)
+4. [ArchWiki: Device_encryption#With_a_keyfile_embedded_in_the_initramfs](https://wiki.archlinux.org/title/Dm-crypt/Device_encryption#With_a_keyfile_embedded_in_the_initramfs)
+
