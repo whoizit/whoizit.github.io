@@ -12,7 +12,7 @@ date = 2022-01-30
 - **launchd**-подобные (Systemd, Suite66, nosh, Dinit)
 
 Характерные отличия:
-- SysV - скрипты запуска обычно имеют 3 SHELL функции - start(), stop(), reload()
+- SysV - скрипты запуска обычно имеют 4 SHELL функции - start(), stop(), restart(), reload()
 - daemontools - примитивизм, простота, однострочники на SHELL, автоматический перезапуск
 - launchd - сервис-файлы в стиле ini (key=value)
 
