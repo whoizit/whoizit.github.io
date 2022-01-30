@@ -11,6 +11,11 @@ s6 [самый быстрый получается](https://www.youtube.com/watc
 - **daemontools**-подобные (daemontools-encore, runit, s6)
 - **launchd**-подобные (Systemd, Suite66, nosh, Dinit)
 
+Характерные отличия:
+- SysV - скрипты запуска обычно имеют 3 SHELL функции - start(), stop(), reload()
+- daemontools - однострочники на SHELL, автоматический перезапуск
+- launchd - конфигурационный фаёл в стиле ini
+
 s6 это ремейк runit; runit это ремейк daemontools от великого DJB
 s6 (s6-db-reload) в отличии от всех выше-названных компилирует списки сервисов в базу данных (compiled service database)
 те секунды которые он экономит при загрузке могут быть неоспоримым преимуществом при использовании ноутбуков
