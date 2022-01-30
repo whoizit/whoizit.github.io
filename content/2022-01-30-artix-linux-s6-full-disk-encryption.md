@@ -71,7 +71,7 @@ cryptsetup luksAddKey /dev/sdX# /crypto_keyfile.bin
 ```sh
 # /etc/mkinitcpio.conf
 FILES=(/crypto_keyfile.bin)
-# Добавить encrypt, resume и возможно lvm2
+# Добавить encrypt, resume и возможно lvm2 перед filesystems
 HOOKS=(base udev autodetect modconf block encrypt lvm2 resume filesystems keyboard fsck)
 ```
 ```sh
