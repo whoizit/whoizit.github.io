@@ -13,6 +13,7 @@ s6 [самый быстрый получается](https://www.youtube.com/watc
 
 s6 это ремейк runit; runit это ремейк daemontools от великого DJB
 s6 (s6-db-reload) в отличии от всех выше-названных компилирует списки сервисов в базу данных (compiled service database)
+те секунды которые он экономит при загрузке могут быть неоспоримым преимуществом при использовании ноутбуков
 
 Links:
 1. [ArtixWiki: Installation With Full Disk Encryption](https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption)
