@@ -4,6 +4,8 @@ date = 2022-01-30
 +++
 *(черновик)*
 
+## Почему s6?
+
 системы инициализации Linux можно условно разделить на три вида:
 - System 5, **SysV**-подобные (Upstart, OpenRC)
 - **daemontools**-подобные (daemontools-encore, runit, s6)
