@@ -6,6 +6,13 @@ date = 2022-01-30
 
 s6 [самый быстрый получается](https://www.youtube.com/watch?v=mkkU1CHI3TY)
 
+системы инициализации Linux можно условно разделить на три вида:
+- System 5, **SysV**-подобные (Upstart, OpenRC)
+- **daemontools**-подобные (daemontools-encore, runit, s6)
+- **launchd**-подобные (Systemd, Suite66, nosh)
+
+s6 это ремейк runit; runit это ремейк daemontools от великого DJB
+
 Links:
 1. [ArtixWiki: Installation With Full Disk Encryption](https://wiki.artixlinux.org/Main/InstallationWithFullDiskEncryption)
 2. [ArchWiki: Partitioning#BIOS/GPT_layout_example](https://wiki.archlinux.org/title/Partitioning#BIOS/GPT_layout_example)
