@@ -71,7 +71,7 @@ mount /dev/mapper/root /mnt
 
 basestrap /mnt base base-devel s6-base elogind-s6 f2fs-tools \
 	linux-zen linux-zen-headers linux-firmware \
-	cryptsetup-s6 device-mapper-s6 lvm2-s6 vim dhcpcd
+	cryptsetup-s6 device-mapper-s6 lvm2-s6 vim dhcpcd wpa_supplicant
 
 fstabgen -U /mnt >> /mnt/etc/fstab
 blkid -s UUID -o value /dev/sdX2
