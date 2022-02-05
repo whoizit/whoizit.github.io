@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title></title>
+	<link href="https://whoizit.github.io/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://whoizit.github.io"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2022-01-30T00:00:00+00:00</updated>
+	<id>https://whoizit.github.io/atom.xml</id>
+	<entry xml:lang="en">
+		<title>Artix Linux s6 Full Disk Encryption</title>
+		<published>2022-01-30T00:00:00+00:00</published>
+		<updated>2022-01-30T00:00:00+00:00</updated>
+		<link href="https://whoizit.github.io/artix-linux-s6-full-disk-encryption/" type="text/html"/>
+		<id>https://whoizit.github.io/artix-linux-s6-full-disk-encryption/</id>
+		<content type="html">&lt;p&gt;&lt;em&gt;(черновик)&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;pochemu-s6&quot;&gt;Почему s6?&lt;&#x2F;h2&gt;
+&lt;p&gt;Системы инициализации Linux можно условно разделить на три вида (характерные черты):&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;System 5, &lt;strong&gt;SysV&lt;&#x2F;strong&gt;-подобные (Upstart, OpenRC): скрипты запуска обычно имеют 4 SHELL функции - start(), stop(), restart(), reload()&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;daemontools&lt;&#x2F;strong&gt;-подобные (daemontools-encore, runit, s6): примитивизм, простота, однострочники на SHELL, автоматический перезапуск&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;launchd&lt;&#x2F;strong&gt;-подобные (Systemd, Suite66, nosh, Dinit): сервис-файлы в стиле ini (key=value)&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Что касается SystemD - многословность, неадекватно длинные команды, комбаин-всё в себе, более 1.3 млн строк кода (высокая vulnerability)&lt;&#x2F;p&gt;
+&lt;p&gt;s6 это ремейк runit; runit это ремейк daemontools от гения современности, от великого математика-криптографа, от Хакера - DJB&lt;&#x2F;p&gt;
+&lt;p&gt;s6 &lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=mkkU1CHI3TY&quot;&gt;самый быстрый получается&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;s6-rc (s6-db-reload) в отличии от всех выше-названных компилирует списки сервисов c их зависимостями в базу данных (compiled service database). Те секунды которые он экономит при загрузке могут быть неоспоримым преимуществом при активном использовании ноутбуков&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;vybor-kripty&quot;&gt;Выбор крипты&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cryptsetup&lt;&#x2F;span&gt;&lt;span&gt; benchmark
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Имейте ввиду что у меня benchmark показывает в 3 раза меньшие результаты в live ISO, чем в установленой системе с ядром linux-zen.&lt;&#x2F;p&gt;
+&lt;p&gt;Считаю значения по умолчанию оптимальными (aes-xts-plain64:sha256:512b) и достаточно быстрыми (на моем древнем процессоре AMD FX-4300 это:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#2b303b;color:#c0c5ce;&quot;&gt;&lt;code&gt;&lt;span&gt;~ &amp;gt; cryptsetup benchmark
+&lt;&#x2F;span&gt;&lt;span&gt;# Tests are approximate using memory only (no storage IO).
+&lt;&#x2F;span&gt;&lt;span&gt;PBKDF2-sha1      1190211 iterations per second for 256-bit key
+&lt;&#x2F;span&gt;&lt;span&gt;PBKDF2-sha256    1424695 iterations per second for 256-bit key
+&lt;&#x2F;span&gt;&lt;span&gt;PBKDF2-sha512    1227840 iterations per second for 256-bit key
+&lt;&#x2F;span&gt;&lt;span&gt;PBKDF2-ripemd160  691672 iterations per second for 256-bit key
+&lt;&#x2F;span&gt;&lt;span&gt;PBKDF2-whirlpool  382134 iterations per second for 256-bit key
+&lt;&#x2F;span&gt;&lt;span&gt;argon2i       4 iterations, 866287 memory, 4 parallel threads (CPUs) for 256-bit key (requested 2000 ms time)
+&lt;&#x2F;span&gt;&lt;span&gt;argon2id      4 iterations, 858144 memory, 4 parallel threads (CPUs) for 256-bit key (requested 2000 ms time)
+&lt;&#x2F;span&gt;&lt;span&gt;#     Algorithm |       Key |      Encryption |      Decryption
+&lt;&#x2F;span&gt;&lt;span&gt;        aes-cbc        128b       534.3 MiB&#x2F;s      1795.6 MiB&#x2F;s
+&lt;&#x2F;span&gt;&lt;span&gt;    serpent-cbc        128b        83.2 MiB&#x2F;s       312.4 MiB&#x2F;s
+&lt;&#x2F;span&gt;&lt;span&gt;    twofish-cbc        128b       179.4 MiB&#x2F;s       241.3 MiB&#x2F;s
+&lt;&#x2F;span&gt;&lt;span&gt;        aes-cbc        256b       406.3 MiB&#x2F;s      1450.6 MiB&#x2F;s
+&lt;&#x2F;span&gt;&lt;span&gt;    serpent-cbc        256b        87.4 MiB&#x2F;s       313.5 MiB&#x2F;s
+&lt;&#x2F;span&gt;&lt;span&gt;    twofish-cbc        256b       188.2 MiB&#x2F;s       237.3 MiB&#x2F;s
+&lt;&#x2F;span&gt;&lt;span&gt;        aes-xts        256b      1546.1 MiB&#x2F;s      1543.9 MiB&#x2F;s
+&lt;&#x2F;span&gt;&lt;span&gt;    serpent-xts        256b       277.3 MiB&#x2F;s       291.6 MiB&#x2F;s
+&lt;&#x2F;span&gt;&lt;span&gt;    twofish-xts        256b       223.9 MiB&#x2F;s       227.5 MiB&#x2F;s
+&lt;&#x2F;span&gt;&lt;span&gt;        aes-xts        512b      1306.2 MiB&#x2F;s      1289.4 MiB&#x2F;s
+&lt;&#x2F;span&gt;&lt;span&gt;    serpent-xts        512b       285.5 MiB&#x2F;s       293.9 MiB&#x2F;s
+&lt;&#x2F;span&gt;&lt;span&gt;    twofish-xts        512b       223.1 MiB&#x2F;s       223.3 MiB&#x2F;s
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Если вы используете очень быстрый NVMe возможно это не для вас. Если используете SATA интерфейс, вы можете поставить более тяжелую крипту, например serpent-xts:argon2id:512b&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;ustanovka&quot;&gt;Установка&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fdisk -l&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;dev&#x2F;sdX
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# BIOS&#x2F;GPT
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# sda1 = BIOS boot, 1M
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fdisk&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;dev&#x2F;sdX
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cryptsetup&lt;&#x2F;span&gt;&lt;span&gt; luksFormat&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; --type&lt;&#x2F;span&gt;&lt;span&gt; luks1 &#x2F;dev&#x2F;sda2
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cryptsetup&lt;&#x2F;span&gt;&lt;span&gt; open &#x2F;dev&#x2F;sda2 root
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mkfs.f2fs -lROOT&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;dev&#x2F;mapper&#x2F;root
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mount&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;dev&#x2F;mapper&#x2F;root &#x2F;mnt
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;basestrap&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;mnt base base-devel s6-base elogind-s6 f2fs-tools \
+&lt;&#x2F;span&gt;&lt;span&gt;	linux-zen linux-zen-headers linux-firmware \
+&lt;&#x2F;span&gt;&lt;span&gt;	cryptsetup-s6 device-mapper-s6 lvm2-s6 vim dhcpcd wpa_supplicant
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# TODO connman заменяет dhcpcd и ntpd. iwd заменяет wpa_supplicant no connman щас работает только с wpa_supplicant
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fstabgen -U&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;mnt &amp;gt;&amp;gt; &#x2F;mnt&#x2F;etc&#x2F;fstab
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;blkid -s&lt;&#x2F;span&gt;&lt;span&gt; UUID&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -o&lt;&#x2F;span&gt;&lt;span&gt; value &#x2F;dev&#x2F;sdX2
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;artix-chroot&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;mnt bash
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Имя и путь к файлу &lt;code&gt;&#x2F;crypto_keyfile.bin&lt;&#x2F;code&gt; важны подробности в &lt;code&gt;4&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;dd&lt;&#x2F;span&gt;&lt;span&gt; bs=512 count=4 if=&#x2F;dev&#x2F;random of=&#x2F;crypto_keyfile.bin iflag=fullblock
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;chmod&lt;&#x2F;span&gt;&lt;span&gt; 600 &#x2F;crypto_keyfile.bin
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;chmod&lt;&#x2F;span&gt;&lt;span&gt; 600 &#x2F;boot&#x2F;initramfs-linux*
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cryptsetup&lt;&#x2F;span&gt;&lt;span&gt; luksAddKey &#x2F;dev&#x2F;sdX# &#x2F;crypto_keyfile.bin
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# &#x2F;etc&#x2F;mkinitcpio.conf
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;FILES&lt;&#x2F;span&gt;&lt;span&gt;=(&#x2F;crypto_keyfile.bin)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Добавить encrypt, resume и возможно lvm2 перед filesystems
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HOOKS&lt;&#x2F;span&gt;&lt;span&gt;=(base udev autodetect modconf block encrypt lvm2 resume filesystems keyboard fsck)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# &#x2F;etc&#x2F;default&#x2F;grub
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;GRUB_CMDLINE_LINUX_DEFAULT&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;loglevel=3 quiet &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;	cryptdevice=UUID=uuid-of-luks-partition:root &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;\
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;	resume=UUID=uuid-of-swap-partition&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;GRUB_ENABLE_CRYPTODISK&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;y
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;grub-install --target&lt;&#x2F;span&gt;&lt;span&gt;=i386-pc &#x2F;dev&#x2F;sdX
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;grub-mkconfig -o&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;boot&#x2F;grub&#x2F;grub.cfg
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mkinitcpio -P
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# REBOOT
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;pacman -Syu
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;pacman -S&lt;&#x2F;span&gt;&lt;span&gt; opendoas artix-archlinux-support 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;vim&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;etc&#x2F;pacman.conf
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;pacman -S&lt;&#x2F;span&gt;&lt;span&gt; git cargo rust atool \
+&lt;&#x2F;span&gt;&lt;span&gt;	sway swaylock seatd-s6 i3status-rust mako wl-clipboard \
+&lt;&#x2F;span&gt;&lt;span&gt;	firefox thunderbird keepassxc mpv yt-dlp
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;cargo&lt;&#x2F;span&gt;&lt;span&gt; install paru
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Links:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;wiki.artixlinux.org&#x2F;Main&#x2F;InstallationWithFullDiskEncryption&quot;&gt;ArtixWiki: Installation With Full Disk Encryption&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;wiki.archlinux.org&#x2F;title&#x2F;Partitioning#BIOS&#x2F;GPT_layout_example&quot;&gt;ArchWiki: Partitioning#BIOS&#x2F;GPT_layout_example&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;wiki.archlinux.org&#x2F;title&#x2F;GRUB#Encrypted_&#x2F;boot&quot;&gt;ArchWiki: GRUB#Encrypted_&#x2F;boot&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;wiki.archlinux.org&#x2F;title&#x2F;Dm-crypt&#x2F;Device_encryption#With_a_keyfile_embedded_in_the_initramfs&quot;&gt;ArchWiki: Device_encryption#With_a_keyfile_embedded_in_the_initramfs&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>interception-tools и dual-function-keys</title>
+		<published>2022-01-26T00:00:00+00:00</published>
+		<updated>2022-01-26T00:00:00+00:00</updated>
+		<link href="https://whoizit.github.io/interception-tools/" type="text/html"/>
+		<id>https://whoizit.github.io/interception-tools/</id>
+		<content type="html">&lt;p&gt;Возможно вам повезёт, когда вы начинаете с Linux, опытные товарищи вам подскажут, что раскладку клавиатуры лучше переключать одной клавишей. И возможно вы преодолев &lt;a href=&quot;https:&#x2F;&#x2F;lurkmore.to&#x2F;%D0%A1%D0%B8%D0%BD%D0%B4%D1%80%D0%BE%D0%BC_%D1%83%D1%82%D1%91%D0%BD%D0%BA%D0%B0&quot;&gt;синдром утёнка&lt;&#x2F;a&gt; захотите это сделать. Один из популярных вариантов переключения раскладки это Caps_Lock. Нажимаем - меняем раскладку, нажимаем через Shift - включается Caps Lock.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;(Если вы до сих пор меняете раскладку двумя клавишами, то возможно вы что-то делаете не так)&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Позже, когда вы овладели vim или emacs, вам может остро захотеться сделать так, чтобы &lt;code&gt;Ctrl&lt;&#x2F;code&gt; был на месте &lt;code&gt;Caps_Lock&lt;&#x2F;code&gt; или &lt;code&gt;Tab&lt;&#x2F;code&gt; или даже сменить клавиатуру на HHKB, Pok3r или что-то ещё. Но в Linux есть замечательная &lt;a href=&quot;https:&#x2F;&#x2F;gitlab.com&#x2F;interception&#x2F;linux&#x2F;tools&quot;&gt;interception-tools&lt;&#x2F;a&gt; с плагином &lt;a href=&quot;https:&#x2F;&#x2F;gitlab.com&#x2F;interception&#x2F;linux&#x2F;plugins&#x2F;dual-function-keys&quot;&gt;dual-function-keys&lt;&#x2F;a&gt;, которые позволяют не только сменить Caps на Ctrl, но и добавить действие при удержании клавиши.&lt;&#x2F;p&gt;
+&lt;p&gt;Можно например перебиндить клавиши так (как у меня):&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Caps_Lock&lt;&#x2F;code&gt; по короткому нажатию это &lt;code&gt;Esc&lt;&#x2F;code&gt;, а при удерживании это &lt;code&gt;L_Ctrl&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;Tab&lt;&#x2F;code&gt; по короткому нажатию это &lt;code&gt;Tab&lt;&#x2F;code&gt;, а при удерживании это &lt;code&gt;L_Alt&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;L_Alt&lt;&#x2F;code&gt; меняется на &lt;code&gt;L_Meta&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;Caps_Lock&lt;&#x2F;code&gt; переносится на &lt;code&gt;R_Alt&lt;&#x2F;code&gt; (Caps Lock остаётся переключателем раскладки)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;L_Shift&lt;&#x2F;code&gt; по короткому нажатию это &lt;code&gt;(&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;R_Shift&lt;&#x2F;code&gt; по короткому нажатию это &lt;code&gt;)&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;gitlab.com&#x2F;interception&#x2F;linux&#x2F;plugins&#x2F;dual-function-keys#quick-start&quot;&gt;Quick start&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;В конфиге важно не ошибиться с названием клавиатуры (NAME). Посмотреть название клавиатуры можно так (ZSH):&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sh&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-sh &quot;&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;~ &lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; for x (&#x2F;dev&#x2F;input&#x2F;by-id&#x2F;*-kbd) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sudo&lt;&#x2F;span&gt;&lt;span&gt; uinput&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt; -p -d &lt;&#x2F;span&gt;&lt;span&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;x &lt;&#x2F;span&gt;&lt;span&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rg&lt;&#x2F;span&gt;&lt;span&gt; NAME                                                   ± master | &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;25&lt;&#x2F;span&gt;&lt;span&gt; Jan 09:43:09 (2)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;NAME:&lt;&#x2F;span&gt;&lt;span&gt; A4TECH USB Device Keyboard
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;NAME:&lt;&#x2F;span&gt;&lt;span&gt; SEM HCT Keyboard
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;&#x2F;etc&#x2F;interception&#x2F;udevmon.yaml:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;JOB&lt;&#x2F;span&gt;&lt;span&gt;: &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;intercept -g $DEVNODE | dual-function-keys -c &#x2F;etc&#x2F;interception&#x2F;dual-function-keys&#x2F;mappings.yaml | uinput -d $DEVNODE&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;DEVICE&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;NAME&lt;&#x2F;span&gt;&lt;span&gt;: &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;SEM HCT Keyboard&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;EVENTS&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;EV_KEY&lt;&#x2F;span&gt;&lt;span&gt;: [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_TAB&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_CAPSLOCK&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTSHIFT&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTCTRL&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTMETA&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTALT&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_RIGHTSHIFT&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_RIGHTALT&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;&#x2F;etc&#x2F;interception&#x2F;dual-function-keys&#x2F;mappings.yaml:&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;MAPPINGS&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;KEY&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_CAPSLOCK
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TAP&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_ESC
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HOLD&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTCTRL
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;KEY&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_TAB
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TAP&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_TAB
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HOLD&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTALT
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;KEY&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTCTRL
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TAP&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_UNKNOWN
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HOLD&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_UNKNOWN
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;KEY&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTMETA
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TAP&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_RIGHTMETA
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HOLD&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTCTRL
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;KEY&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTALT
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TAP&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTMETA
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HOLD&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTMETA
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;KEY&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_RIGHTALT
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TAP&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_CAPSLOCK
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HOLD&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTCTRL
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;KEY&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTSHIFT
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TAP&lt;&#x2F;span&gt;&lt;span&gt;: [ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTSHIFT&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_9&lt;&#x2F;span&gt;&lt;span&gt;, ]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HOLD&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_LEFTSHIFT
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;KEY&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_RIGHTSHIFT
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TAP&lt;&#x2F;span&gt;&lt;span&gt;: [ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_RIGHTSHIFT&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_0&lt;&#x2F;span&gt;&lt;span&gt;, ]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;HOLD&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;KEY_RIGHTSHIFT
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;KEY_UNKNOWN&lt;&#x2F;code&gt; вырубает действие&#x2F;клавишу&lt;&#x2F;p&gt;
+&lt;p&gt;В mappings.yaml я делаю некоторые лишние действия которые я не описал, возможно они вам не понадобятся&lt;&#x2F;p&gt;
+&lt;p&gt;Остаётся только запустить сервис и эти биндинги у вас будут работать даже без графического окружения&lt;&#x2F;p&gt;
+</content>
+	</entry>
+</feed>

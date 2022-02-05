@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+        <meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+        <meta content="width=device-width, initial-scale=1" name="viewport"/>
+
+        
+        <meta name="robots" content="index,follow">
+        <meta name="googlebot" content="index,follow">
+
+        <meta name="google" content="nositelinkssearchbox">
+        <meta name="google" content="notranslate">
+        
+
+        
+
+
+
+        
+        <link href="https://whoizit.github.io/style.css" rel="stylesheet"/>
+        
+        <title>
+    interception-tools и dual-function-keys - 
+</title>
+    </head>
+    <body>
+        <script>
+            function evaluate_prefers_color() {
+                if(localStorage.getItem('prefers-color') === 'dark') {
+                    document.body.classList.add('dark');
+                } else if(localStorage.getItem('prefers-color') === 'light') {
+                    document.body.classList.remove('dark');
+                } else if(window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.body.classList.add('dark');
+                }
+            }
+            evaluate_prefers_color();
+        </script>
+        
+    <main class="article-content">
+        <p><a href="..">..</a>/interception-tools</p>
+        
+        <h1>interception-tools и dual-function-keys</h1>
+        <p>Published: <time>2022-01-26</time></p>
+        
+        <hr />
+        <p>Возможно вам повезёт, когда вы начинаете с Linux, опытные товарищи вам подскажут, что раскладку клавиатуры лучше переключать одной клавишей. И возможно вы преодолев <a href="https://lurkmore.to/%D0%A1%D0%B8%D0%BD%D0%B4%D1%80%D0%BE%D0%BC_%D1%83%D1%82%D1%91%D0%BD%D0%BA%D0%B0">синдром утёнка</a> захотите это сделать. Один из популярных вариантов переключения раскладки это Caps_Lock. Нажимаем - меняем раскладку, нажимаем через Shift - включается Caps Lock.</p>
+<p><em>(Если вы до сих пор меняете раскладку двумя клавишами, то возможно вы что-то делаете не так)</em></p>
+<p>Позже, когда вы овладели vim или emacs, вам может остро захотеться сделать так, чтобы <code>Ctrl</code> был на месте <code>Caps_Lock</code> или <code>Tab</code> или даже сменить клавиатуру на HHKB, Pok3r или что-то ещё. Но в Linux есть замечательная <a href="https://gitlab.com/interception/linux/tools">interception-tools</a> с плагином <a href="https://gitlab.com/interception/linux/plugins/dual-function-keys">dual-function-keys</a>, которые позволяют не только сменить Caps на Ctrl, но и добавить действие при удержании клавиши.</p>
+<p>Можно например перебиндить клавиши так (как у меня):</p>
+<ul>
+<li><code>Caps_Lock</code> по короткому нажатию это <code>Esc</code>, а при удерживании это <code>L_Ctrl</code></li>
+<li><code>Tab</code> по короткому нажатию это <code>Tab</code>, а при удерживании это <code>L_Alt</code></li>
+<li><code>L_Alt</code> меняется на <code>L_Meta</code></li>
+<li><code>Caps_Lock</code> переносится на <code>R_Alt</code> (Caps Lock остаётся переключателем раскладки)</li>
+<li><code>L_Shift</code> по короткому нажатию это <code>(</code></li>
+<li><code>R_Shift</code> по короткому нажатию это <code>)</code></li>
+</ul>
+<p><a href="https://gitlab.com/interception/linux/plugins/dual-function-keys#quick-start">Quick start</a></p>
+<p>В конфиге важно не ошибиться с названием клавиатуры (NAME). Посмотреть название клавиатуры можно так (ZSH):</p>
+<pre data-lang="sh" style="background-color:#2b303b;color:#c0c5ce;" class="language-sh "><code class="language-sh" data-lang="sh"><span style="color:#bf616a;">~ </span><span>&gt; for x (/dev/input/by-id/*-kbd) </span><span style="color:#bf616a;">sudo</span><span> uinput</span><span style="color:#bf616a;"> -p -d </span><span>$</span><span style="color:#bf616a;">x </span><span>| </span><span style="color:#bf616a;">rg</span><span> NAME                                                   ± master | </span><span style="color:#bf616a;">25</span><span> Jan 09:43:09 (2)
+</span><span style="color:#bf616a;">NAME:</span><span> A4TECH USB Device Keyboard
+</span><span style="color:#bf616a;">NAME:</span><span> SEM HCT Keyboard
+</span></code></pre>
+<p><strong>/etc/interception/udevmon.yaml:</strong></p>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span>- </span><span style="color:#bf616a;">JOB</span><span>: &quot;</span><span style="color:#a3be8c;">intercept -g $DEVNODE | dual-function-keys -c /etc/interception/dual-function-keys/mappings.yaml | uinput -d $DEVNODE</span><span>&quot;
+</span><span>  </span><span style="color:#bf616a;">DEVICE</span><span>:
+</span><span>    </span><span style="color:#bf616a;">NAME</span><span>: &quot;</span><span style="color:#a3be8c;">SEM HCT Keyboard</span><span>&quot;
+</span><span>    </span><span style="color:#bf616a;">EVENTS</span><span>:
+</span><span>      </span><span style="color:#bf616a;">EV_KEY</span><span>: [</span><span style="color:#a3be8c;">KEY_TAB</span><span>, </span><span style="color:#a3be8c;">KEY_CAPSLOCK</span><span>, </span><span style="color:#a3be8c;">KEY_LEFTSHIFT</span><span>, </span><span style="color:#a3be8c;">KEY_LEFTCTRL</span><span>, </span><span style="color:#a3be8c;">KEY_LEFTMETA</span><span>, </span><span style="color:#a3be8c;">KEY_LEFTALT</span><span>, </span><span style="color:#a3be8c;">KEY_RIGHTSHIFT</span><span>, </span><span style="color:#a3be8c;">KEY_RIGHTALT</span><span>]
+</span></code></pre>
+<p><strong>/etc/interception/dual-function-keys/mappings.yaml:</strong></p>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">MAPPINGS</span><span>:
+</span><span>  - </span><span style="color:#bf616a;">KEY</span><span>: </span><span style="color:#a3be8c;">KEY_CAPSLOCK
+</span><span>    </span><span style="color:#bf616a;">TAP</span><span>: </span><span style="color:#a3be8c;">KEY_ESC
+</span><span>    </span><span style="color:#bf616a;">HOLD</span><span>: </span><span style="color:#a3be8c;">KEY_LEFTCTRL
+</span><span>
+</span><span>  - </span><span style="color:#bf616a;">KEY</span><span>: </span><span style="color:#a3be8c;">KEY_TAB
+</span><span>    </span><span style="color:#bf616a;">TAP</span><span>: </span><span style="color:#a3be8c;">KEY_TAB
+</span><span>    </span><span style="color:#bf616a;">HOLD</span><span>: </span><span style="color:#a3be8c;">KEY_LEFTALT
+</span><span>
+</span><span>  - </span><span style="color:#bf616a;">KEY</span><span>: </span><span style="color:#a3be8c;">KEY_LEFTCTRL
+</span><span>    </span><span style="color:#bf616a;">TAP</span><span>: </span><span style="color:#a3be8c;">KEY_UNKNOWN
+</span><span>    </span><span style="color:#bf616a;">HOLD</span><span>: </span><span style="color:#a3be8c;">KEY_UNKNOWN
+</span><span>
+</span><span>  - </span><span style="color:#bf616a;">KEY</span><span>: </span><span style="color:#a3be8c;">KEY_LEFTMETA
+</span><span>    </span><span style="color:#bf616a;">TAP</span><span>: </span><span style="color:#a3be8c;">KEY_RIGHTMETA
+</span><span>    </span><span style="color:#bf616a;">HOLD</span><span>: </span><span style="color:#a3be8c;">KEY_LEFTCTRL
+</span><span>
+</span><span>  - </span><span style="color:#bf616a;">KEY</span><span>: </span><span style="color:#a3be8c;">KEY_LEFTALT
+</span><span>    </span><span style="color:#bf616a;">TAP</span><span>: </span><span style="color:#a3be8c;">KEY_LEFTMETA
+</span><span>    </span><span style="color:#bf616a;">HOLD</span><span>: </span><span style="color:#a3be8c;">KEY_LEFTMETA
+</span><span>
+</span><span>  - </span><span style="color:#bf616a;">KEY</span><span>: </span><span style="color:#a3be8c;">KEY_RIGHTALT
+</span><span>    </span><span style="color:#bf616a;">TAP</span><span>: </span><span style="color:#a3be8c;">KEY_CAPSLOCK
+</span><span>    </span><span style="color:#bf616a;">HOLD</span><span>: </span><span style="color:#a3be8c;">KEY_LEFTCTRL
+</span><span>
+</span><span>  - </span><span style="color:#bf616a;">KEY</span><span>: </span><span style="color:#a3be8c;">KEY_LEFTSHIFT
+</span><span>    </span><span style="color:#bf616a;">TAP</span><span>: [ </span><span style="color:#a3be8c;">KEY_LEFTSHIFT</span><span>, </span><span style="color:#a3be8c;">KEY_9</span><span>, ]
+</span><span>    </span><span style="color:#bf616a;">HOLD</span><span>: </span><span style="color:#a3be8c;">KEY_LEFTSHIFT
+</span><span>
+</span><span>  - </span><span style="color:#bf616a;">KEY</span><span>: </span><span style="color:#a3be8c;">KEY_RIGHTSHIFT
+</span><span>    </span><span style="color:#bf616a;">TAP</span><span>: [ </span><span style="color:#a3be8c;">KEY_RIGHTSHIFT</span><span>, </span><span style="color:#a3be8c;">KEY_0</span><span>, ]
+</span><span>    </span><span style="color:#bf616a;">HOLD</span><span>: </span><span style="color:#a3be8c;">KEY_RIGHTSHIFT
+</span></code></pre>
+<p><code>KEY_UNKNOWN</code> вырубает действие/клавишу</p>
+<p>В mappings.yaml я делаю некоторые лишние действия которые я не описал, возможно они вам не понадобятся</p>
+<p>Остаётся только запустить сервис и эти биндинги у вас будут работать даже без графического окружения</p>
+
+    </main>
+
+        <footer>
+            <hr text="&copy; Copyright 2022" />
+            
+            <div class="footer-social-media">
+                <a onclick="toggle_prefers_color()">Toggle Theme</a>
+                
+                    <a href="https://github.com/whoizit" target="_blank">GitHub</a>
+                
+                    <a href="https://qoto.org/@whoami" target="_blank">Mastodon</a>
+                
+                    <a href="https://whoizit.github.io/atom.xml" target="_blank">Feed</a>
+                
+            </div>
+            
+        </footer>
+    </body>
+
+    
+        <script src="https://whoizit.github.io/js/script.js"/></script>
+    
+</html>
